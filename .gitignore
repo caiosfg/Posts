@@ -1,4 +1,6 @@
 /.phpunit.cache
+db-data
+logs
 node_modules
 /posts_api/public/build
 /posts_api/public/hot
