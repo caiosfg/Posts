@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use App\Http\Resources\PostResource;
 use App\Models\Post;
 
 class PostController extends Controller
@@ -14,15 +15,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        return Post::all();
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return PostResource::collection(Post::all());
     }
 
     /**
@@ -30,7 +23,9 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-        //
+        $post = Post::create($request->validated());
+
+        return PostResource::make($post);
     }
 
     /**
@@ -38,23 +33,18 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        return PostResource::make($post);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Post $post)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        //
+        $post->update($request->validated());
+
+        return PostResource::make($post);
     }
 
     /**
@@ -62,6 +52,8 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $post->delete();
+
+        return response()->noContent();
     }
 }
