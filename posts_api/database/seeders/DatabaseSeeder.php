@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Opnion;
 use App\Models\Post;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -14,6 +15,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Post::factory(5)->create();
+        User::factory(3)->has(
+            Post::factory(5),
+            Opnion::factory(3)
+        )->create();
     }
 }

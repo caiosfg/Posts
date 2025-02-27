@@ -5,8 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Post extends Model
+class Opnion extends Model
 {
+    /** @use HasFactory<\Database\Factories\OpnionFactory> */
     use HasFactory;
 
     protected $fillable = ['name', 'description'];
