@@ -18,8 +18,8 @@ class OpnionResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
-            'user_id' => (bool) $this->user_id,
-            'post_id' => (bool) $this->post_id,
+            'user_id' => $this->user_id,
+            'post_id' => $this->post_id,
         ];
     }
 }

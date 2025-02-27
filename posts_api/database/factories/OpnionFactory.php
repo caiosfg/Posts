@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Post;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,6 +21,8 @@ class OpnionFactory extends Factory
         return [
             'name' => fake()->sentence(),
             'description' => fake()->sentence(),
+            'user_id' => rand(1, 2),
+            'post_id' =>  rand(1, 2)
         ];
     }
 }
