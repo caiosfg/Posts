@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
-// use App\Models\User;
+use App\Models\User;
 // use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
@@ -23,12 +23,8 @@ class LoginController extends Controller
                 'email' => ['credentials incorrect!']
             ]);
         }
-        // $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->first();
 
-        // if(!$user || !Hash::check($request->password, $user->password)){
-        //     throw ValidationException::withMessages([
-        //         'email' => ['credentials incorrect!']
-        //     ]);
-        // }
+        return $user;
     }
 }

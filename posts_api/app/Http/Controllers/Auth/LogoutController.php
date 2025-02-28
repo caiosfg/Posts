@@ -12,6 +12,8 @@ class LogoutController extends Controller
      */
     public function __invoke(Request $request)
     {
-        auth()->guard('web')->logout();
+        $data = auth()->guard('web')->logout();
+
+        return $data;
     }
 }
