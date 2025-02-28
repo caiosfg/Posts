@@ -24,6 +24,8 @@ class StoreOpnionRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'description' => 'required|string|max:255',
+            'post_id' => 'required|numeric',
+            'user_id' => 'required|numeric',
         ];
     }
 }

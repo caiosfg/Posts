@@ -4,13 +4,10 @@
             <div v-if="createPost" class="w-1/2">
                 <CreatePost @publish="submitBtn($event)" @cancel="toggleCancel()" />
             </div>
-            <div v-else class="w-full flex flex-col items-center justify-center overflow-y-scroll space-y-6 posts" :class="{'pt-64': posts.length > 3}">
+            <div v-else class="w-full flex flex-col items-center justify-center overflow-y-scroll space-y-6 posts" :class="{'pt-64': posts.length > 2}">
                 <div class="w-1/2" v-for="post in posts" :key="post.id">
                     <div>
                         <Post :post-file="post" @refresh="getAllPosts()" />
-                    </div>
-                    <div class="bg-white rounded-b-lg p-4">
-                        <input type="text" placeholder="comente....." class="p-2 w-full">
                     </div>
                 </div>
             </div>

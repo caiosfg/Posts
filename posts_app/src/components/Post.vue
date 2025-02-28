@@ -35,16 +35,14 @@
                         </div>
                         <p class="font-bold">Editar</p>
                     </button>
-                    <button type="button"
-                        @click="deleteBtn()"
+                    <button type="button" @click="deleteBtn()"
                         class="focus:bg-lime-300 hover:bg-lime-300 rounded-full px-4 flex items-center justify-center space-x-2">
                         <div class="h-8 w-8 rounded-full bg-lime-300">
                             <DeleteIcon class="h-8 w-8 rounded p-2" />
                         </div>
                         <p class="font-bold">Deletar</p>
                     </button>
-                    <button type="button"
-                        @click="publishBtn()"
+                    <button type="button" @click="publishBtn()"
                         class="focus:bg-lime-300 hover:bg-lime-300 rounded-full px-4 flex items-center justify-center space-x-2">
                         <div class="h-8 w-8 rounded-full bg-lime-300">
                             <PublishIcon class="h-8 w-8 rounded p-2" />
@@ -61,6 +59,28 @@
                 </div>
             </div>
         </form>
+        <div class="bg-white rounded-b-lg p-4">
+            <div v-if="comments.length" class="space-y-2 my-2 py-2  border-b border-b-lime-500">
+                <div v-for="comment in comments" :key="comment.id">
+                    <div class="flex">
+                        <p class="font-bold text-lime-600">@{{ comment.name }}</p>
+                        <p class="font-thin">: {{ comment.description }}</p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <input type="text" placeholder="comente....." class="p-2 w-full" v-model="comment">
+            </div>
+            <div class="flex mt-4">
+                <button type="button" @click="commentPublishBtn()"
+                    class="focus:bg-lime-300 hover:bg-lime-300 rounded-full px-4 flex items-center justify-center space-x-2">
+                    <div class="h-8 w-8 rounded-full bg-lime-300">
+                        <PublishIcon class="h-8 w-8 rounded p-2" />
+                    </div>
+                    <p class="font-bold">Publicar</p>
+                </button>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -72,6 +92,7 @@ import CommentIcon from './icons/Comment.vue'
 import PublishIcon from './icons/Publish.vue'
 
 import { updatePosts, completePost, removePosts } from '@/http/posts-api'
+import { createOpnions, allOpnions } from '@/http/opnions-api'
 
 export default {
     components: {
@@ -91,11 +112,16 @@ export default {
         return {
             form: {
                 title: this.postFile.name || null,
-                description: this.postFile.description || null ,
+                description: this.postFile.description || null,
             },
             editName: false,
             editDescription: false,
+            comment: null,
+            comments: [],
         };
+    },
+    mounted() {
+        this.Allcomments();
     },
     methods: {
         toggleName() {
@@ -104,33 +130,62 @@ export default {
         toggleDescription() {
             this.editDescription = true;
         },
-        async submitEdited(){
+        async submitEdited() {
             const data = await updatePosts(this.postFile.id, {
                 name: this.form.title,
                 description: this.form.description
             });
 
-            if(data.status === 200) {
+            if (data.status === 200) {
                 this.$emit('refresh', true);
             }
         },
-        async publishBtn(){
+        async publishBtn() {
             const data = await completePost(this.postFile.id, {
                 name: this.form.title,
                 description: this.form.description,
                 read: true
             });
 
-            if(data.status === 200) {
+            if (data.status === 200) {
                 this.$emit('refresh', true);
             }
         },
-        async deleteBtn(){
+        async deleteBtn() {
             const data = await removePosts(this.postFile.id);
-            console.log("🚀 ~ deleteBtn ~ data:", data)
 
-            if(data.status === 204) {
+            if (data.status === 204) {
                 this.$emit('refresh', true);
+            }
+        },
+        async commentPublishBtn() {
+            if (this.comment) {
+
+                const opnion = {
+                    name: 'caio',
+                    description: this.comment,
+                    post_id: this.postFile.id,
+                    user_id: 1,
+
+                }
+
+                const data = await createOpnions(opnion);
+
+                if (data.status === 201) {
+                    this.$emit('refresh', true);
+                }
+            }
+        },
+        async Allcomments() {
+            if (this.postFile) {
+                const { data } = await allOpnions();
+
+                if (data?.data) {
+                    const sendedComments = data.data.filter((comment) => comment.post_id === this.postFile.id);
+                    if (sendedComments.length > 0) {
+                        this.comments = sendedComments;
+                    }
+                }
             }
         }
     }
