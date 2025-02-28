@@ -1,5 +1,6 @@
 /.phpunit.cache
 db-data
+.vscode
 logs
 node_modules
 /posts_api/public/build
