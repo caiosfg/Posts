@@ -38,7 +38,9 @@ const form = reactive({
 
 const handleSubmit = async () => {
     await store.handleLogin(form)
-    router.push({ name: 'posts'})
+    if(store.isLoggedIn){
+        router.push({ name: 'posts'})
+    }
 
 }
 </script>

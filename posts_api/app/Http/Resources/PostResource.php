@@ -19,6 +19,7 @@ class PostResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'read' => (bool) $this->read,
+            'user_id' => $this->user_id,
         ];
     }
 }

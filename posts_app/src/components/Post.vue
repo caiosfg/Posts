@@ -29,32 +29,26 @@
             <div class="mt-4">
                 <div class="flex space-x-4">
                     <button type="submit"
+                        v-if="user && user.isLoggedIn && user.user.id === postFile.user_id"
                         class="focus:bg-lime-300 hover:bg-lime-300 rounded-full px-4 flex items-center justify-center space-x-2">
                         <div class="h-8 w-8 rounded-full bg-lime-300">
                             <EditIcon class="h-8 w-8 rounded p-2" />
                         </div>
                         <p class="font-bold">Editar</p>
                     </button>
-                    <button type="button" @click="deleteBtn()"
+                    <button  v-if="user && user.isLoggedIn && user.user.id === postFile.user_id" type="button" @click="deleteBtn()"
                         class="focus:bg-lime-300 hover:bg-lime-300 rounded-full px-4 flex items-center justify-center space-x-2">
                         <div class="h-8 w-8 rounded-full bg-lime-300">
                             <DeleteIcon class="h-8 w-8 rounded p-2" />
                         </div>
                         <p class="font-bold">Deletar</p>
                     </button>
-                    <button type="button" @click="publishBtn()"
+                    <button v-if="user && user.isLoggedIn && user.user.id === postFile.user_id" type="button" @click="publishBtn()"
                         class="focus:bg-lime-300 hover:bg-lime-300 rounded-full px-4 flex items-center justify-center space-x-2">
                         <div class="h-8 w-8 rounded-full bg-lime-300">
                             <PublishIcon class="h-8 w-8 rounded p-2" />
                         </div>
                         <p class="font-bold">Publicar</p>
-                    </button>
-                    <button v-if="postFile.read" type="button"
-                        class="focus:bg-lime-300 hover:bg-lime-300 rounded-full px-4 flex items-center justify-center space-x-2">
-                        <div class="h-8 w-8 rounded-full bg-lime-300">
-                            <CommentIcon class="h-8 w-8 rounded p-2" />
-                        </div>
-                        <p class="font-bold">Comentar</p>
                     </button>
                 </div>
             </div>
@@ -68,10 +62,10 @@
                     </div>
                 </div>
             </div>
-            <div>
+            <div v-if="user && user.isLoggedIn" >
                 <input type="text" placeholder="comente....." class="p-2 w-full" v-model="comment">
             </div>
-            <div class="flex mt-4">
+            <div  v-if="user && user.isLoggedIn" class="flex mt-4">
                 <button type="button" @click="commentPublishBtn()"
                     class="focus:bg-lime-300 hover:bg-lime-300 rounded-full px-4 flex items-center justify-center space-x-2">
                     <div class="h-8 w-8 rounded-full bg-lime-300">
@@ -94,6 +88,8 @@ import PublishIcon from './icons/Publish.vue'
 import { updatePosts, completePost, removePosts } from '@/http/posts-api'
 import { createOpnions, allOpnions } from '@/http/opnions-api'
 
+import { useAuthStore } from '@/store/auth';
+
 export default {
     components: {
         RouteIcon,
@@ -106,6 +102,12 @@ export default {
         postFile: {
             type: Object,
             required: true,
+        }
+    },
+    computed: {
+        user() {
+            const store = useAuthStore();
+            return store
         }
     },
     data() {
@@ -133,7 +135,9 @@ export default {
         async submitEdited() {
             const data = await updatePosts(this.postFile.id, {
                 name: this.form.title,
-                description: this.form.description
+                description: this.form.description,
+                post_id: this.postFile.id,
+                user_id: this.user.user.id,
             });
 
             if (data.status === 200) {
@@ -144,7 +148,9 @@ export default {
             const data = await completePost(this.postFile.id, {
                 name: this.form.title,
                 description: this.form.description,
-                read: true
+                read: true,
+                post_id: this.postFile.id,
+                user_id: this.user.user.id,
             });
 
             if (data.status === 200) {
@@ -162,10 +168,10 @@ export default {
             if (this.comment) {
 
                 const opnion = {
-                    name: 'anonimo',
+                    name: this.user.user.name || 'anonimo',
                     description: this.comment,
                     post_id: this.postFile.id,
-                    user_id: 1,
+                    user_id: this.user.user.id,
 
                 }
 
@@ -173,6 +179,8 @@ export default {
 
                 if (data.status === 201) {
                     this.$emit('refresh', true);
+                    this.Allcomments();
+                    this.comment = null
                 }
             }
         },
