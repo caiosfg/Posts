@@ -7,6 +7,7 @@ use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
+use Illuminate\Support\Facades\Gate;
 
 class PostController extends Controller
 {
@@ -15,6 +16,8 @@ class PostController extends Controller
      */
     public function index()
     {
+        Gate::authorize('viewAny', Post::class);
+
         return PostResource::collection(auth()->user()->posts()->get());
     }
 
@@ -23,6 +26,10 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
+        if (request()->user()->cannot('create', Post::class )) {
+            abort(403, 'Unauthorized');
+        }
+
         $post = $request->user()->posts()->create($request->validated());
         // $post = Post::create($request->validated());
 
@@ -34,6 +41,8 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
+        Gate::authorize('view',$post);
+
         return PostResource::make($post);
     }
 
@@ -43,6 +52,10 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
+        if ($request->user()->cannot('update',$post )) {
+            abort(403, 'Unauthorized');
+        }
+
         $post->update($request->validated());
 
         return PostResource::make($post);
@@ -53,6 +66,10 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        if (request()->user()->cannot('delete',$post )) {
+            abort(403, 'Unauthorized');
+        }
+
         $post->delete();
 
         return response()->noContent();

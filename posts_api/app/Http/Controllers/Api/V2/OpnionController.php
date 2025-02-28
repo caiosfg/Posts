@@ -7,6 +7,7 @@ use App\Http\Requests\StoreOpnionRequest;
 use App\Http\Requests\UpdateOpnionRequest;
 use App\Models\Opnion;
 use App\Http\Resources\OpnionResource;
+use Illuminate\Support\Facades\Gate;
 
 class OpnionController extends Controller
 {
@@ -15,6 +16,8 @@ class OpnionController extends Controller
      */
     public function index()
     {
+        Gate::authorize('viewAny', Opnion::class);
+
         return OpnionResource::collection(auth()->user()->opnions()->get());
 
     }
@@ -24,6 +27,10 @@ class OpnionController extends Controller
      */
     public function store(StoreOpnionRequest $request)
     {
+        if (request()->user()->cannot('create',Opnion::class )) {
+            abort(403, 'Unauthorized');
+        }
+
         $opnion = $request->user()->opnions()->create($request->validated());
         // $opnion = Opnion::create($request->validated());
 
@@ -35,6 +42,8 @@ class OpnionController extends Controller
      */
     public function show(Opnion $opnion)
     {
+        Gate::authorize('view',$opnion);
+
         return OpnionResource::make($opnion);
     }
 
@@ -43,6 +52,10 @@ class OpnionController extends Controller
      */
     public function update(UpdateOpnionRequest $request, Opnion $opnion)
     {
+        if ($request->user()->cannot('update',$opnion )) {
+            abort(403, 'Unauthorized');
+        }
+
         $opnion->update($request->validated());
 
         return OpnionResource::make($opnion);
@@ -53,6 +66,10 @@ class OpnionController extends Controller
      */
     public function destroy(Opnion $opnion)
     {
+        if (request()->user()->cannot('delete',$opnion )) {
+            abort(403, 'Unauthorized');
+        }
+
         $opnion->delete();
 
         return response()->noContent();
