@@ -162,7 +162,7 @@ export default {
             if (this.comment) {
 
                 const opnion = {
-                    name: 'caio',
+                    name: 'anonimo',
                     description: this.comment,
                     post_id: this.postFile.id,
                     user_id: 1,
