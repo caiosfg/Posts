@@ -30,6 +30,12 @@
                     </div>
                     <div class="focus:bg-lime-300 hover:bg-lime-300 rounded-full px-4 flex items-center justify-center space-x-2">
                         <div class="h-8 w-8 rounded-full bg-lime-300">
+                            <PublishIcon class="h-8 w-8 rounded p-2" />
+                        </div>
+                        <p class="font-bold">Publicar</p>
+                    </div>
+                    <div class="focus:bg-lime-300 hover:bg-lime-300 rounded-full px-4 flex items-center justify-center space-x-2">
+                        <div class="h-8 w-8 rounded-full bg-lime-300">
                             <CommentIcon class="h-8 w-8 rounded p-2" />
                         </div>
                         <p class="font-bold">Comentar</p>
@@ -45,13 +51,15 @@ import RouteIcon from './icons/IconRoute.vue'
 import EditIcon from './icons/Edit.vue'
 import DeleteIcon from './icons/Delete.vue'
 import CommentIcon from './icons/Comment.vue'
+import PublishIcon from './icons/Publish.vue'
 
 export default {
     components: {
         RouteIcon,
         EditIcon,
         DeleteIcon,
-        CommentIcon
+        CommentIcon,
+        PublishIcon
     }
     // ...
 }

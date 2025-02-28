@@ -10,7 +10,7 @@
                 </div>
             </div>
             <div class="w-1/2">
-                <button class="flex items-center justify-center w-full focus:bg-lime-200 hover:bg-lime-300 rounded p-4 mt-4 font-bold">
+                <button class="flex items-center justify-center w-full bg-lime-100 focus:bg-lime-200 hover:bg-lime-300 rounded p-4 mt-4 font-bold">
                     Adicione um post
                 </button>
             </div>
@@ -20,10 +20,16 @@
 
 <script>
 import Post from '../components/Post.vue'
+import { allPosts } from '@/http/posts-api'
 
 export default {
     components: {
         Post
+    },
+    async mounted() {
+
+        const {data} = await allPosts()
+        console.log('aaaa', data)
     }
     // ...
 }
