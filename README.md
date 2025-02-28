@@ -15,6 +15,7 @@
 
 - [x] Laravel ;
 - [x] Docker ;
+- [x] Vue ;
 
 ### Requirements
 
@@ -27,3 +28,9 @@
 3. Execute as migrations para criação das tabelas, dentro do container da api:
 
    > `php artisan migrate`
+
+4 . acesse ` ./posts_app/ ` e execute :
+> `npm run install `
+
+5. Apos conclusao execute, para visualizar o front :
+> `npm run dev `
