@@ -36,6 +36,7 @@
                         <p class="font-bold">Editar</p>
                     </button>
                     <button type="button"
+                        @click="deleteBtn()"
                         class="focus:bg-lime-300 hover:bg-lime-300 rounded-full px-4 flex items-center justify-center space-x-2">
                         <div class="h-8 w-8 rounded-full bg-lime-300">
                             <DeleteIcon class="h-8 w-8 rounded p-2" />
@@ -43,6 +44,7 @@
                         <p class="font-bold">Deletar</p>
                     </button>
                     <button type="button"
+                        @click="publishBtn()"
                         class="focus:bg-lime-300 hover:bg-lime-300 rounded-full px-4 flex items-center justify-center space-x-2">
                         <div class="h-8 w-8 rounded-full bg-lime-300">
                             <PublishIcon class="h-8 w-8 rounded p-2" />
@@ -69,7 +71,7 @@ import DeleteIcon from './icons/Delete.vue'
 import CommentIcon from './icons/Comment.vue'
 import PublishIcon from './icons/Publish.vue'
 
-import { updatePosts } from '@/http/posts-api'
+import { updatePosts, completePost, removePosts } from '@/http/posts-api'
 
 export default {
     components: {
@@ -109,6 +111,25 @@ export default {
             });
 
             if(data.status === 200) {
+                this.$emit('refresh', true);
+            }
+        },
+        async publishBtn(){
+            const data = await completePost(this.postFile.id, {
+                name: this.form.title,
+                description: this.form.description,
+                read: true
+            });
+
+            if(data.status === 200) {
+                this.$emit('refresh', true);
+            }
+        },
+        async deleteBtn(){
+            const data = await removePosts(this.postFile.id);
+            console.log("🚀 ~ deleteBtn ~ data:", data)
+
+            if(data.status === 204) {
                 this.$emit('refresh', true);
             }
         }

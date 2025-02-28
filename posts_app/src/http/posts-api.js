@@ -12,4 +12,4 @@ export const updatePosts = (id, post) => api.put(`${resource}/${id}`, post)
 
 export const removePosts = id => api.delete(`${resource}/${id}`)
 
-export const completePost = (id, post) => api.put(`${resource}/${id}/admin`, post)
+export const completePost = (id, post) => api.patch(`${resource}/${id}/admin`, post)

@@ -4,7 +4,7 @@
             <div v-if="createPost" class="w-1/2">
                 <CreatePost @publish="submitBtn($event)" @cancel="toggleCancel()" />
             </div>
-            <div v-else class="w-full flex flex-col items-center justify-center overflow-y-scroll space-y-6 posts">
+            <div v-else class="w-full flex flex-col items-center justify-center overflow-y-scroll space-y-6 posts" :class="{'pt-64': posts.length > 3}">
                 <div class="w-1/2" v-for="post in posts" :key="post.id">
                     <div>
                         <Post :post-file="post" @refresh="getAllPosts()" />
@@ -49,7 +49,8 @@ export default {
 
             const data = await createPosts({
                 name: title,
-                description: description
+                description: description,
+                read: false
             });
 
             if(data.status === 201) {
