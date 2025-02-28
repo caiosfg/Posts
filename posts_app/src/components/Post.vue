@@ -1,40 +1,45 @@
 <template>
     <div>
-        <div class="border bg-white shadow rounded p-4 flex flex-col">
+        <div v-if="postFile" class="border bg-white shadow rounded p-4 flex flex-col">
             <div class="flex">
                 <div class="h-12 w-12 rounded-full bg-lime-300">
                     <RouteIcon class="h-12 w-12 rounded p-2" />
                 </div>
                 <div class="flex flex-col ml-4">
                     <div class="text-2xl font-bold">
-                        Title
+                        {{ postFile.name }}
                     </div>
                     <div class="font-thin">
-                        Description
+                        {{ postFile.description }}
                     </div>
                 </div>
             </div>
             <div class="mt-4">
                 <div class="flex space-x-4">
-                    <div class="focus:bg-lime-300 hover:bg-lime-300 rounded-full px-4 flex items-center justify-center space-x-2" >
+                    <div
+                        class="focus:bg-lime-300 hover:bg-lime-300 rounded-full px-4 flex items-center justify-center space-x-2">
                         <div class="h-8 w-8 rounded-full bg-lime-300">
                             <EditIcon class="h-8 w-8 rounded p-2" />
                         </div>
                         <p class="font-bold">Editar</p>
                     </div>
-                    <div class="focus:bg-lime-300 hover:bg-lime-300 rounded-full px-4 flex items-center justify-center space-x-2">
+                    <div
+                        class="focus:bg-lime-300 hover:bg-lime-300 rounded-full px-4 flex items-center justify-center space-x-2">
                         <div class="h-8 w-8 rounded-full bg-lime-300">
                             <DeleteIcon class="h-8 w-8 rounded p-2" />
                         </div>
                         <p class="font-bold">Deletar</p>
                     </div>
-                    <div class="focus:bg-lime-300 hover:bg-lime-300 rounded-full px-4 flex items-center justify-center space-x-2">
+                    <div
+                        class="focus:bg-lime-300 hover:bg-lime-300 rounded-full px-4 flex items-center justify-center space-x-2">
                         <div class="h-8 w-8 rounded-full bg-lime-300">
                             <PublishIcon class="h-8 w-8 rounded p-2" />
                         </div>
                         <p class="font-bold">Publicar</p>
                     </div>
-                    <div class="focus:bg-lime-300 hover:bg-lime-300 rounded-full px-4 flex items-center justify-center space-x-2">
+                    <div
+                        v-if="postFile.read"
+                        class="focus:bg-lime-300 hover:bg-lime-300 rounded-full px-4 flex items-center justify-center space-x-2">
                         <div class="h-8 w-8 rounded-full bg-lime-300">
                             <CommentIcon class="h-8 w-8 rounded p-2" />
                         </div>
@@ -60,8 +65,13 @@ export default {
         DeleteIcon,
         CommentIcon,
         PublishIcon
-    }
-    // ...
+    },
+    props: {
+        postFile: {
+            type: Object,
+            required: true,
+        }
+    },
 }
 
 </script>

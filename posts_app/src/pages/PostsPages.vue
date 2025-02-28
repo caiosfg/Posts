@@ -1,16 +1,22 @@
 <template>
     <div class="bg-black h-screen">
         <div class="mx-auto p-12 flex flex-col items-center justify-center">
-            <div class="w-1/2">
-                <div>
-                    <Post />
-                </div>
-                <div class="bg-white rounded-b-lg p-4">
-                    <input type="text" placeholder="comente....." class="p-2 w-full">
+            <div v-if="createPost" class="w-1/2">
+                <CreatePost @publish="submitBtn($event)" @cancel="toggleCancel()" />
+            </div>
+            <div v-else class="w-full flex flex-col items-center justify-center overflow-y-scroll space-y-6 posts">
+                <div class="w-1/2" v-for="post in posts" :key="post.id">
+                    <div>
+                        <Post :post-file="post" />
+                    </div>
+                    <div class="bg-white rounded-b-lg p-4">
+                        <input type="text" placeholder="comente....." class="p-2 w-full">
+                    </div>
                 </div>
             </div>
-            <div class="w-1/2">
-                <button class="flex items-center justify-center w-full bg-lime-100 focus:bg-lime-200 hover:bg-lime-300 rounded p-4 mt-4 font-bold">
+            <div v-if="!createPost" class="w-1/2">
+                <button @click="createPost = true"
+                    class="flex items-center justify-center w-full bg-lime-100 focus:bg-lime-200 hover:bg-lime-300 rounded p-4 mt-4 font-bold">
                     Adicione um post
                 </button>
             </div>
@@ -20,18 +26,53 @@
 
 <script>
 import Post from '../components/Post.vue'
-import { allPosts } from '@/http/posts-api'
+import CreatePost from '../components/CreatePost.vue'
+import { allPosts, createPosts } from '@/http/posts-api'
 
 export default {
     components: {
-        Post
+        Post,
+        CreatePost
+    },
+    data() {
+        return {
+            posts: [],
+            createPost: false,
+        };
     },
     async mounted() {
+        this.getAllPosts()
+    },
+    methods: {
+        async submitBtn(event) {
+            const { title, description } = event
 
-        const {data} = await allPosts()
-        console.log('aaaa', data)
+            const data = await createPosts({
+                name: title,
+                description: description
+            });
+
+            if(data.status === 201) {
+                await this.getAllPosts();
+                this.createPost = false;
+            }
+
+            console.log('data', data);
+        },
+        toggleCancel() {
+            this.createPost = false;
+        },
+        async getAllPosts() {
+            const { data } = await allPosts()
+            this.posts = data?.data
+        }
     }
-    // ...
 }
 
 </script>
+
+<style scoped>
+.posts {
+    height: 80vh;
+}
+</style>
