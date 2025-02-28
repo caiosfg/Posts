@@ -4,7 +4,7 @@
             <div v-if="createPost" class="w-1/2">
                 <CreatePost @publish="submitBtn($event)" @cancel="toggleCancel()" />
             </div>
-            <div v-else class="w-full flex flex-col items-center justify-center overflow-y-scroll space-y-6 posts" :class="{'pt-4': posts.length > 2}">
+            <div v-else class="w-full flex flex-col items-center justify-center overflow-y-scroll space-y-6" :class="{'pt-4': posts.length > 2, 'posts': posts.length >= 1}">
                 <div class="w-1/2" v-for="post in posts" :key="post.id">
                     <div>
                         <Post :post-file="post" @refresh="getAllPosts()" />
@@ -16,6 +16,9 @@
                     class="flex items-center justify-center w-full bg-lime-100 focus:bg-lime-200 hover:bg-lime-300 rounded p-4 mt-4 font-bold">
                     Adicione um post
                 </button>
+            </div>
+            <div v-else class="w-1/2 flex items-center justify-center">
+                <h3 class="text-white text-3xl font-bold">Realize o login</h3>
             </div>
         </div>
     </div>
